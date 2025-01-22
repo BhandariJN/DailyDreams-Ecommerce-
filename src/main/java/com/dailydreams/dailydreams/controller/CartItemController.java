@@ -7,11 +7,13 @@ import com.dailydreams.dailydreams.response.ApiResponse;
 import com.dailydreams.dailydreams.service.cart.ICartService;
 import com.dailydreams.dailydreams.service.cartIem.ICartItemService;
 import com.dailydreams.dailydreams.service.user.UserService;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,14 +28,18 @@ public class CartItemController {
     @PostMapping("/item/add")
     public ResponseEntity<ApiResponse> addIemToCartItem(@RequestParam Long productId, @RequestParam int quantity) {
         try {
-            User user = userService.getUserById(4L);
+            User user = userService.getAuthencatedUser();
             Cart cart = cartService.cartInitializer(user);
 
 
             cartItemService.addItemToCart(cart.getId(),productId,quantity);
             return ResponseEntity.ok(new ApiResponse("Item Add Success!", null));
         } catch (ResourceNotFoundException e) {
-return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+        catch (JwtException e){
+            return ResponseEntity.status(UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
         }
 
     }

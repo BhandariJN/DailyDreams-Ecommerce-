@@ -13,6 +13,7 @@ import com.dailydreams.dailydreams.service.product.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +53,7 @@ public ResponseEntity<ApiResponse> allProducts() {
  }
 
 
+ @PreAuthorize("hasRole('ADMINROLE_ADMIN')")
  @PostMapping("/add")
  public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product){
 
@@ -65,7 +67,8 @@ public ResponseEntity<ApiResponse> allProducts() {
  }
 
 
- @PutMapping("/product/{productId}/update")
+    @PreAuthorize("hasRole('ADMINROLE_ADMIN')")
+  @PutMapping("/product/{productId}/update")
 public  ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest product, @PathVariable Long productId){
 
     try {
@@ -79,6 +82,7 @@ public  ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequ
 }
 
 
+    @PreAuthorize("hasRole('ADMINROLE_ADMIN')")
 @DeleteMapping("/product/{productId}/delete")
 public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId){
 
