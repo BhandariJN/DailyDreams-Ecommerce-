@@ -8,6 +8,7 @@ import com.dailydreams.dailydreams.request.CreateUserRequest;
 import com.dailydreams.dailydreams.request.UpdateUserRequest;
 import com.dailydreams.dailydreams.response.ApiResponse;
 import com.dailydreams.dailydreams.service.user.IUserService;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,13 +38,13 @@ public class UserController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> createUser(@RequestBody CreateUserRequest request){
+    public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody CreateUserRequest request){
 
         try {
             User user = userService.createUser(request);
             UserDto responseDto = userService.convertToUserDto(user);
             return ResponseEntity.ok(new ApiResponse("User Create Success!", responseDto));
-        } catch (AlreadyExistsException e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage (), null));
         }
 

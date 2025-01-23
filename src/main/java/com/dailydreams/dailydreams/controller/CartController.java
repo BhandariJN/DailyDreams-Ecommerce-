@@ -9,6 +9,7 @@ import com.dailydreams.dailydreams.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 public class CartController {
     private final CartService cartService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{userId}/myCart")
     public ResponseEntity<ApiResponse> getCart(@PathVariable Long userId) {
         try {
@@ -32,6 +34,7 @@ public class CartController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{cartId}/clear")
     public ResponseEntity<ApiResponse> clearCart(@PathVariable Long cartId) {
         try {
@@ -43,6 +46,7 @@ public class CartController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/cart/{cartId}/total-amount")
     public ResponseEntity<ApiResponse> getTotalAmount(@PathVariable Long cartId) {
         try {
